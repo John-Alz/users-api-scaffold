@@ -29,7 +29,7 @@ public class Handler {
 
     public Mono<ServerResponse> updateUser(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(User.class)
-                .flatMap(userUseCase::saveUser)
+                .flatMap(userUseCase::updateUser)
                 .flatMap(user -> ServerResponse
                         .ok().bodyValue(user));
     }
