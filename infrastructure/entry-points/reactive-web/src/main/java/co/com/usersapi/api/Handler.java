@@ -1,6 +1,7 @@
 package co.com.usersapi.api;
 
 import co.com.usersapi.api.dto.request.UserRequestDTO;
+import co.com.usersapi.api.dto.response.UserResponseDTO;
 import co.com.usersapi.api.mapper.UserMapper;
 import co.com.usersapi.usecase.user.UserUseCase;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -33,6 +35,16 @@ public class Handler {
         return userUseCase.getUser(id)
                 .map(userMapper::toResponse)
                 .flatMap(user -> ServerResponse.ok().bodyValue(user));
+    }
+
+    public Mono<ServerResponse> getUsers(ServerRequest serverRequest) {
+        String name = serverRequest.queryParam("name").orElse(null);
+        var flux =  (name == null || name.isBlank())
+                ? userUseCase.getUsers()
+                : userUseCase.getUserByName(name)
+                .map(userMapper::toResponse);
+        return ServerResponse.ok()
+                .body(flux, UserResponseDTO.class);
     }
 
     public Mono<ServerResponse> updateUser(ServerRequest serverRequest) {

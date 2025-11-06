@@ -16,6 +16,8 @@ public class RouterRest {
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
         return route(POST("/api/v1/user"), handler::saveUser)
                 .andRoute(GET("/api/v1/user/{id}"), handler::getUser)
+                .andRoute(GET("/api/v1/users"), handler::getUsers)
                 .andRoute(PUT("/api/v1/user"), handler::updateUser)
-                .and(route(DELETE("/api/v1/user/{id}"), handler::deleteUser));    }
+                .and(route(DELETE("/api/v1/user/{id}"), handler::deleteUser));
+    }
 }

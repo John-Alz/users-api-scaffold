@@ -5,10 +5,12 @@ import co.com.usersapi.model.user.gateways.UserRepository;
 import co.com.usersapi.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
 public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<User, UserEntity, String, MyReactiveRepository> implements UserRepository {
+
     public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper) {
         /**
          *  Could be use mapper.mapBuilder if your domain model implement builder pattern
@@ -26,6 +28,17 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<User,
     @Override
     public Mono<User> getUser(Long id) {
         return this.findById(String.valueOf(id));
+    }
+
+    @Override
+    public Flux<User> getUsers() {
+        return this.findAll();
+    }
+
+    @Override
+    public Flux<User> getUsersByName(String name) {
+        return this.repository.findByFirstNameContainingIgnoreCase(name)
+                .map(this::toEntity);
     }
 
     @Override
