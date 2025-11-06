@@ -3,6 +3,7 @@ package co.com.usersapi.usecase.user;
 import co.com.usersapi.model.user.User;
 import co.com.usersapi.model.user.gateways.UserRepository;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -17,6 +18,14 @@ public class UserUseCase {
 
     public Mono<User> getUser(Long id) {
         return userRepository.getUser(id);
+    }
+
+    public Flux<User> getUsers() {
+        return userRepository.getUsers();
+    }
+
+    public Flux<User> getUserByName(String name) {
+        return userRepository.getUsersByName(name);
     }
 
     public Mono<User> updateUser(User user) {
